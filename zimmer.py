@@ -23,10 +23,10 @@ selected_shape = None
 # Final Vars
 white = (255, 255, 255)
 black = (0, 0, 0)
-blue = (0, 0, 255)
 brown = (165, 42, 42)
 yellow = (218,165,32)
-dark_blue = (0, 0, 200)
+object_color = (0, 0, 255)
+selected_color = (0, 0, 200)
 room_color = (220, 220, 220)
 darker_room = (200, 200, 200)
 
@@ -72,9 +72,9 @@ menu.enable
 shapes = []
 
 def draw_shape(shape):
-    color = blue
+    color = object_color
     if shape['selected']:
-        color = dark_blue
+        color = selected_color
         
     if shape['shape'] == 1:
         pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
@@ -93,7 +93,7 @@ def draw_shape(shape):
     else:
         pygame.draw.ellipse(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
 
-    screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (0,0,0)), (shape['x'] + 10, shape['y'] + 10))
+    screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (255,255,255)), (shape['x'] + 10, shape['y'] + 10))
 
 
 def is_shape_clicked(mouse_pos, shape):
@@ -113,7 +113,7 @@ def draw_room():
 
     # Draw surrounding lines + doors + heater + outlets
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x+595, room_y], 5)
-    screen.blit(pygame.font.SysFont('Arial', 10).render('595cm', True, (0,0,0)), ([room_x+290, room_y-15]))
+    screen.blit(pygame.font.SysFont('Arial', 10).render('595cm', True, (155,0,0)), ([room_x+290, room_y-15]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+595, room_y],[room_x+595, room_y+510], 5)
     screen.blit(pygame.font.SysFont('Arial', 10).render('510cm', True, (0,0,0)), ([room_x+600, room_y+255]))
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x, room_y+405], 5)
