@@ -32,7 +32,7 @@ darker_room = (200, 200, 200)
 
 # initialize room variables
 room_width, room_height = 595, 510
-room_x, room_y = window_width/2, 50
+room_x, room_y = window_width/2-50, 50
 # bottom left shape of room
 bl_cut_width, bl_cut_height = 259, 205
 bl_cut_x, bl_cut_y = room_x, room_y + room_height - bl_cut_height
@@ -113,13 +113,21 @@ def draw_room():
 
     # Draw surrounding lines + doors + heater + outlets
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x+595, room_y], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('595cm', True, (0,0,0)), ([room_x+290, room_y-15]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+595, room_y],[room_x+595, room_y+510], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('510cm', True, (0,0,0)), ([room_x+600, room_y+255]))
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x, room_y+405], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('405cm', True, (0,0,0)), ([room_x-35, room_y+202]))
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y+405],[room_x+140, room_y+405], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('140cm', True, (0,0,0)), ([room_x+60, room_y+410]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+140, room_y+405],[room_x+140, room_y+303], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('102cm', True, (0,0,0)), ([room_x+145, room_y+350]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+140, room_y+303],[room_x+259, room_y+303], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('119cm', True, (0,0,0)), ([room_x+190, room_y+305]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+259, room_y+303],[room_x+259, room_y+510], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('205cm', True, (0,0,0)), ([room_x+230, room_y+405]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+259, room_y+510],[room_x+595, room_y+510], 5)
+    screen.blit(pygame.font.SysFont('Arial', 10).render('336cm', True, (0,0,0)), ([room_x+399, room_y+515]))
 
     # Doors
     pygame.draw.line(screen, brown,[room_x, room_y+190],[room_x, room_y+405], 2)
