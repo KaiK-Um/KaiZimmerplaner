@@ -41,7 +41,7 @@ bl_add_width, bl_add_height = 140, 102
 bl_add_x, bl_add_y = room_x, bl_cut_y
 
 # Menu for creating shapes
-creating = {'x': window_width/2 + 50, 'y': window_height/2, 'width': 100, 'height': 100, 'selected': False, 'name': "", "shape" : 1}
+creating = {'x': window_width/2 + 50, 'y': window_height/2, 'width': 100, 'height': 100, 'selected': False, 'name': "", "shape" : 1,'angle': 0}
 
 
 def shape_name(value):
@@ -61,9 +61,9 @@ def create_shape():
 
 menu = pygame_menu.Menu('Create Shape', window_width/2-150, window_height,theme=pygame_menu.themes.THEME_DEFAULT,position=(0,0))
 menu.add.text_input('Name :', default='', onchange=shape_name)
-menu.add.text_input('Breite (in cm):', default='100', input_type=pygame_menu.locals.INPUT_INT, onchange=shape_width)
-menu.add.text_input('Höhe (in cm):', default='100', input_type=pygame_menu.locals.INPUT_INT, onchange=shape_height)
-menu.add.selector('Shape :', [('Rechteck', 1), ('L-form', 2), ('Linke L-form', 3), ('Umgedrehte L-form', 4), ('U. L. L-form', 5), ('Kreis', 6)], onchange=shape_type)
+menu.add.text_input('Breite (in cm):', default='', input_type=pygame_menu.locals.INPUT_INT, onchange=shape_width)
+menu.add.text_input('Höhe (in cm):', default='', input_type=pygame_menu.locals.INPUT_INT, onchange=shape_height)
+menu.add.selector('Shape :', [('Rechteck', 1), ('L-form', 2), ('Kreis', 6)], onchange=shape_type)
 menu.add.button('Create', create_shape)
 menu.enable
 
@@ -77,23 +77,31 @@ def draw_shape(shape):
         color = selected_color
         
     if shape['shape'] == 1:
-        pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
+        rotated_surface = pygame.transform.rotate(pygame.Surface((shape['width'], shape['height'])), shape['angle'])
+        rotated_rect = rotated_surface.get_rect(center=(shape['x'] + shape['width'] // 2, shape['y'] + shape['height'] // 2))
+        pygame.draw.rect(screen, color, rotated_rect)
+        screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (255,255,255)), (rotated_rect.x+ 10, rotated_rect.y+ 10))
     elif shape['shape'] == 2: #L
-        pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
-        pygame.draw.rect(screen, room_color, (shape['x']+shape['width']/2, shape['y'], shape['width']/2, shape['height']/2))
-    elif shape['shape'] == 3: #l. L
-        pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
-        pygame.draw.rect(screen, room_color, (shape['x'], shape['y'], shape['width']/2, shape['height']/2))
-    elif shape['shape'] == 4: #U. L
-        pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
-        pygame.draw.rect(screen, room_color, (shape['x']+shape['width']/2, shape['y']+shape['height']/2, shape['width']/2, shape['height']/2))
-    elif shape['shape'] == 5: #U. l. L
-        pygame.draw.rect(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
-        pygame.draw.rect(screen, room_color, (shape['x'], shape['y']+shape['height']/2, shape['width']/2, shape['height']/2))
+        rotated_surface = pygame.transform.rotate(pygame.Surface((shape['width'], shape['height'])), shape['angle'])
+        rotated_rect = rotated_surface.get_rect(center=(shape['x'] + shape['width'] // 2, shape['y'] + shape['height'] // 2))
+        if shape['angle'] == 0:
+            pygame.draw.rect(screen, color, rotated_rect)
+            pygame.draw.rect(screen, room_color, (rotated_rect.x +rotated_rect.width/2, rotated_rect.y, rotated_rect.width/2, rotated_rect.height/2))
+        elif shape['angle'] == 90:
+            pygame.draw.rect(screen, color, rotated_rect)
+            pygame.draw.rect(screen, room_color, (rotated_rect.x+rotated_rect.width/2, rotated_rect.y+rotated_rect.height/2, rotated_rect.width/2, rotated_rect.height/2))
+        elif shape['angle'] == 180:
+            pygame.draw.rect(screen, color, rotated_rect)
+            pygame.draw.rect(screen, room_color, (rotated_rect.x, rotated_rect.y+rotated_rect.height/2, rotated_rect.width/2, rotated_rect.height/2))
+        else:
+            pygame.draw.rect(screen, color, rotated_rect)
+            pygame.draw.rect(screen, room_color, (rotated_rect.x, rotated_rect.y, rotated_rect.width/2, rotated_rect.height/2))
+        screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (255,255,255)), (rotated_rect.x+ 10, rotated_rect.y+ 10))
     else:
         pygame.draw.ellipse(screen, color, (shape['x'], shape['y'], shape['width'], shape['height']))
+        screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (255,255,255)), (shape['x'] + 10, shape['y'] + 10))
 
-    screen.blit(pygame.font.SysFont('Arial', 15).render(shape['name'], True, (255,255,255)), (shape['x'] + 10, shape['y'] + 10))
+    
 
 
 def is_shape_clicked(mouse_pos, shape):
@@ -113,7 +121,7 @@ def draw_room():
 
     # Draw surrounding lines + doors + heater + outlets
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x+595, room_y], 5)
-    screen.blit(pygame.font.SysFont('Arial', 10).render('595cm', True, (155,0,0)), ([room_x+290, room_y-15]))
+    screen.blit(pygame.font.SysFont('Arial', 10).render('595cm', True, (0,0,0)), ([room_x+290, room_y-15]))
     pygame.draw.line(screen, (0, 0, 0),[room_x+595, room_y],[room_x+595, room_y+510], 5)
     screen.blit(pygame.font.SysFont('Arial', 10).render('510cm', True, (0,0,0)), ([room_x+600, room_y+255]))
     pygame.draw.line(screen, (0, 0, 0),[room_x, room_y],[room_x, room_y+405], 5)
@@ -182,6 +190,9 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             is_dragging = False
             is_resizing = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:  # Right mouse button
+            if selected_shape:
+                selected_shape['angle'] = (selected_shape['angle'] + 90) % 360
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE and selected_shape:
                 shapes.remove(selected_shape)
