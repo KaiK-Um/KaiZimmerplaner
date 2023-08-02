@@ -5,3 +5,4 @@ Dieses Programm hat die folgenden Funktionen:
 - Bewegen einer Form via drag and drop
 - Anpassung der Grösse durch klicken und ziehen an der Ecke unten rechts
 - Löschen einer Form durch Backspace
+- Drehen eines Objekts durch Rechtsklick
